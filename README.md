@@ -19,3 +19,8 @@ API request project with Treehouse <br />It requests a JSON object from the API 
 - async/await, promise
 - modal, modal navigation
 - live search
+
+## Reference
+
+- [regular expressions 101](https://regex101.com/)
+- [CSSmatic](https://www.cssmatic.com/box-shadow)
