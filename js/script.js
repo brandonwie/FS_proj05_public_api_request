@@ -162,15 +162,3 @@ function formatBirthday(day) {
   const regex = /^(\d{4})(\d{2})(\d{2})$/;
   return extractBirthday.replace(regex, "$3/$2/$1");
 }
-
-function nextButtonSample() {
-  const nextButton = document.querySelector(".current-modal #modal-prev");
-  const modalDiv = nextButton.parentNode.parentNode;
-  //   currentModal.setAttribute("style", "display: none");
-  //   currentModal.nextSibling.removeAttribute("style");
-}
-
-function beforeButtonSample() {
-  currentModal.setAttribute("style", "display: none");
-  currentModal.previousSibling.removeAttribute("style");
-}
