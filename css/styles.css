@@ -210,6 +210,14 @@ header h1 {
   transition: 0.4s ease-out;
   outline: none;
 }
+/* Custom Styles */
+.modal-btn-container .btn:hover {
+  background: #f2aa4cff;
+}
+
+.modal-close-btn:hover {
+  background: #f2aa4cff;
+}
 
 /* ===================================== 
    Media Queries

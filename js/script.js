@@ -2,17 +2,10 @@ const randomUserAPI = "https://randomuser.me/api/?nat=US&results=12";
 const gallery = document.querySelector("#gallery");
 const search = document.querySelector(".search-container");
 const body = document.querySelector("body");
-const xButton = document.querySelector("#modal-close-btn");
 
-// Search Container
-const form = document.createElement("form");
-form.setAttribute("action", "#");
-form.setAttribute("method", "get");
-search.appendChild(form);
-form.innerHTML = `
-    <input type="search" id="search-input" class="search-input" placeholder="Search...">
-    <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
-`;
+/********************************
+ *!  API Request Section
+ *********************************/
 
 // Handle all fetch requests
 async function getJSON(url) {
@@ -31,7 +24,7 @@ async function getEmployees(url) {
   return Promise.all(profiles);
 }
 
-// Modal
+// Generate Card & Modal within one function
 function generateHTML(data) {
   data.map(person => {
     person.phone = formatPhoneNumber(person.phone);
@@ -53,22 +46,22 @@ function generateHTML(data) {
 
     // GENERATE MODALS
     const modal = document.createElement("div");
-    modal.classList.add("modal-container");
+    modal.classList.add("modal-container", "match");
     modal.setAttribute("style", "display: none");
     body.appendChild(modal);
     modal.innerHTML = `
               <div class="modal">
                 <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
-                  <div class="modal-info-container">
-                      <img class="modal-img" src=${person.picture.large} alt="profile picture">
-                      <h3 id="name" class="modal-name cap">${person.name.first} ${person.name.last}</h3>
-                      <p class="modal-text">${person.email}</p>
-                      <p class="modal-text cap">${person.location.city}</p>
-                      <hr>
-                      <p class="modal-text">${person.phone}</p>
-                      <p class="modal-text">${person.location.street.number} ${person.location.street.name} ${person.location.city} ${person.location.state} ${person.location.postcode}</p>
-                      <p class="modal-text">Birthday: ${person.dob.date}</p>
-                  </div>
+                <div class="modal-info-container">
+                    <img class="modal-img" src=${person.picture.large} alt="profile picture">
+                    <h3 id="name" class="modal-name cap">${person.name.first} ${person.name.last}</h3>
+                    <p class="modal-text">${person.email}</p>
+                    <p class="modal-text cap">${person.location.city}</p>
+                    <hr>
+                    <p class="modal-text">${person.phone}</p>
+                    <p class="modal-text">${person.location.street.number} ${person.location.street.name} ${person.location.city} ${person.location.state} ${person.location.postcode}</p>
+                    <p class="modal-text">Birthday: ${person.dob.date}</p>
+                </div>
               </div>
       
               <div class="modal-btn-container">
@@ -87,6 +80,11 @@ getEmployees(randomUserAPI)
     console.log(err);
   });
 
+/********************************
+ *!  Event-listener Section
+ *********************************/
+
+// Click-event in Cards in gallery
 gallery.addEventListener("click", e => {
   // if a target is not an empty space in the div with class "gallery", (to prevent console err)
   if (e.target.className !== "gallery") {
@@ -108,8 +106,9 @@ gallery.addEventListener("click", e => {
   }
 });
 
-document.addEventListener("click", e => {
-  // close the activated modal if the target is a close button or contains 'x' or outside of the modal
+// Click-event in Modal
+body.addEventListener("click", e => {
+  // MODAL CLOSER: close the activated modal if the target is a close button or contains 'x' or outside of the modal
   if (
     e.target.className === "modal-close-btn" ||
     e.target.textContent === "X" ||
@@ -117,8 +116,15 @@ document.addEventListener("click", e => {
   ) {
     const modalDiv = e.target.closest(".modal-container");
     modalDiv.setAttribute("style", "display: none");
+    modalDiv.classList.remove("current-modal");
   }
-  // for PREV and NEXT on MODAL
+  //TODO: For PREV and NEXT on MODAL
+  const modalMatch = document.querySelectorAll(".match");
+  const currentModal = document.querySelector(".current-modal");
+  console.log(modalMatch);
+  for (let i = 0; i < modalMatch.length; i++) {
+    console.log(modalMatch[i].className);
+  }
   const modalDiv = document.querySelectorAll(".modal-container");
   const nextButton = document.querySelector(".current-modal #modal-prev");
   const currentModalDiv = nextButton.parentNode.parentNode;
@@ -130,6 +136,7 @@ document.addEventListener("click", e => {
     currentModalDiv.setAttribute("style", "display: none");
     currentModalDiv.classList.remove("current-modal");
     // setting for PREV. sibling MODAL
+    // for loop => gather what is matching
     currentModalDiv.previousSibling.removeAttribute("style");
     currentModalDiv.previousSibling.classList.add("current-modal");
   }
@@ -145,6 +152,10 @@ document.addEventListener("click", e => {
     currentModalDiv.nextSibling.classList.add("current-modal");
   }
 });
+
+/********************************
+ *!  DATA Reformat with RegEx
+ *********************************/
 
 // Function to reformat given phone number data
 function formatPhoneNumber(num) {
@@ -162,3 +173,39 @@ function formatBirthday(day) {
   const regex = /^(\d{4})(\d{2})(\d{2})$/;
   return extractBirthday.replace(regex, "$3/$2/$1");
 }
+
+/********************************
+ *!  Search Section
+ *********************************/
+
+// Search Container
+const form = document.createElement("form");
+form.setAttribute("action", "#");
+form.setAttribute("method", "get");
+search.appendChild(form);
+form.innerHTML = `
+    <input type="search" id="search-input" class="search-input" placeholder="Search...">
+    <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
+`;
+
+// Live-search function
+const searchInput = document.querySelector("#search-input");
+searchInput.addEventListener("keyup", e => {
+  const nameInCards = document.querySelectorAll(".card #name");
+  const nameInModals = document.querySelectorAll(".modal-container #name");
+  const userInput = e.target.value.toLowerCase();
+  for (let i = 0; i < nameInCards.length; i++) {
+    const nameCardDiv = nameInCards[i];
+    const name = nameCardDiv.textContent.toLowerCase();
+    const cardDiv = nameCardDiv.closest(".card");
+    const nameModalDiv = nameInModals[i];
+    const modalDiv = nameModalDiv.closest(".modal-container");
+    if (name.includes(userInput)) {
+      cardDiv.removeAttribute("style");
+      modalDiv.classList.add("match");
+    } else {
+      cardDiv.setAttribute("style", "display: none");
+      modalDiv.classList.remove("match");
+    }
+  }
+});

@@ -22,5 +22,5 @@ API request project with Treehouse <br />It requests a JSON object from the API 
 
 ## Reference
 
-- [regular expressions 101](https://regex101.com/)
-- [CSSmatic](https://www.cssmatic.com/box-shadow)
+- [regular expressions 101](https://regex101.com/): RegEx test
+- [CSSmatic](https://www.cssmatic.com/box-shadow): box shadow
