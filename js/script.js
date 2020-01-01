@@ -108,50 +108,69 @@ gallery.addEventListener("click", e => {
 
 // Click-event in Modal
 body.addEventListener("click", e => {
-  // MODAL CLOSER: close the activated modal if the target is a close button or contains 'x' or outside of the modal
-  if (
-    e.target.className === "modal-close-btn" ||
-    e.target.textContent === "X" ||
-    e.target.className.includes("modal-container")
-  ) {
-    const modalDiv = e.target.closest(".modal-container");
-    modalDiv.setAttribute("style", "display: none");
-    modalDiv.classList.remove("current-modal");
-  }
-  //TODO: For PREV and NEXT on MODAL
-  const modalMatch = document.querySelectorAll(".match");
   const currentModal = document.querySelector(".current-modal");
-  console.log(modalMatch);
-  for (let i = 0; i < modalMatch.length; i++) {
-    console.log(modalMatch[i].className);
-  }
-  const modalDiv = document.querySelectorAll(".modal-container");
-  const nextButton = document.querySelector(".current-modal #modal-prev");
-  const currentModalDiv = nextButton.parentNode.parentNode;
-  // setting for PREV button
-  if (
-    e.target.className.includes("modal-prev") &&
-    currentModalDiv !== modalDiv[0]
-  ) {
-    currentModalDiv.setAttribute("style", "display: none");
-    currentModalDiv.classList.remove("current-modal");
-    // setting for PREV. sibling MODAL
-    // for loop => gather what is matching
-    currentModalDiv.previousSibling.removeAttribute("style");
-    currentModalDiv.previousSibling.classList.add("current-modal");
-  }
-  // setting for NEXT button
-  if (
-    e.target.className.includes("modal-next") &&
-    currentModalDiv !== modalDiv[11]
-  ) {
-    currentModalDiv.setAttribute("style", "display: none");
-    currentModalDiv.classList.remove("current-modal");
-    // setting for NEXT sibling MODAL
-    currentModalDiv.nextSibling.removeAttribute("style");
-    currentModalDiv.nextSibling.classList.add("current-modal");
+  if (currentModal) {
+    // MODAL CLOSER: close the activated modal if the target is a close button or contains 'x' or outside of the modal
+    if (
+      e.target.className === "modal-close-btn" ||
+      e.target.textContent === "X" ||
+      e.target.className.includes("modal-container")
+    ) {
+      const modalDiv = e.target.closest(".modal-container");
+      modalDiv.setAttribute("style", "display: none");
+      modalDiv.classList.remove("current-modal");
+    }
   }
 });
+
+// PREV & NEXT
+body.addEventListener("click", e => {
+  //1. gather matching modal divs
+  const matchModalDivs = document.querySelectorAll(".match");
+  const currentModalDiv = document.querySelector(".current-modal");
+  if (
+    // if the target includes the class name "modal-prev" and not the first matching modal,
+    e.target.className.includes("modal-prev") &&
+    currentModalDiv !== matchModalDivs[0]
+  ) {
+    for (let i = 0; i < matchModalDivs.length; i++) {
+      const currentModal = matchModalDivs[i];
+      const prevModal = matchModalDivs[i - 1];
+      if (matchModalDivs[i].className.includes("current-modal")) {
+        currentModal.setAttribute("style", "display: none");
+        currentModal.classList.remove("current-modal");
+        // setting for PREV. sibling MODAL
+        prevModal.removeAttribute("style");
+        prevModal.classList.add("current-modal");
+      }
+    }
+  }
+  if (
+    // if the target includes the class name "modal-next" and not the last matching modal,
+    e.target.className.includes("modal-next") &&
+    currentModalDiv !== matchModalDivs[matchModalDivs.length]
+  ) {
+    for (let i = 0; i < matchModalDivs.length; i++) {
+      const currentModal = matchModalDivs[i];
+      const nextModal = matchModalDivs[i + 1];
+      if (matchModalDivs[i].className.includes("current-modal")) {
+        currentModal.setAttribute("style", "display: none");
+        currentModal.classList.remove("current-modal");
+        console.log(nextModal);
+        nextModal.removeAttribute("style");
+        nextModal.classList.add("current-modal");
+      }
+    }
+  }
+});
+
+// body.addEventListener("click", e => {
+//   //1. gather matching modal divs
+//   const matchModalDivs = document.querySelectorAll(".match");
+//   const currentModalDiv = document.querySelector(".current-modal");
+
+//   }
+// });
 
 /********************************
  *!  DATA Reformat with RegEx
