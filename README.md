@@ -2,7 +2,7 @@
 
 - 5th Full-stack project
 - [General info](#general-info)
-- [API source](#api)
+- [API source](#api-used)
 - [Features](#features)
 
 ## General info
