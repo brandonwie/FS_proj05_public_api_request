@@ -84,7 +84,7 @@ getEmployees(randomUserAPI)
  *!  Event-listener Section
  *********************************/
 
-// Click-event in Cards in gallery
+// CARDS IN GALLERY
 gallery.addEventListener("click", e => {
   // if a target is not an empty space in the div with class "gallery", (to prevent console err)
   if (e.target.className !== "gallery") {
@@ -106,7 +106,7 @@ gallery.addEventListener("click", e => {
   }
 });
 
-// Click-event in Modal
+// CLOSING MODAL
 body.addEventListener("click", e => {
   const currentModal = document.querySelector(".current-modal");
   if (currentModal) {
@@ -123,11 +123,13 @@ body.addEventListener("click", e => {
   }
 });
 
-// PREV & NEXT
+// PREV & NEXT MODAL
 body.addEventListener("click", e => {
-  //1. gather matching modal divs
+  //gather matching modal divs
   const matchModalDivs = document.querySelectorAll(".match");
+  // target current div
   const currentModalDiv = document.querySelector(".current-modal");
+  // PREVIOUS MODAL
   if (
     // if the target includes the class name "modal-prev" and not the first matching modal,
     e.target.className.includes("modal-prev") &&
@@ -145,6 +147,7 @@ body.addEventListener("click", e => {
       }
     }
   }
+  // NEXT MODAL
   if (
     // if the target includes the class name "modal-next" and not the last matching modal,
     e.target.className.includes("modal-next") &&
@@ -163,14 +166,6 @@ body.addEventListener("click", e => {
     }
   }
 });
-
-// body.addEventListener("click", e => {
-//   //1. gather matching modal divs
-//   const matchModalDivs = document.querySelectorAll(".match");
-//   const currentModalDiv = document.querySelector(".current-modal");
-
-//   }
-// });
 
 /********************************
  *!  DATA Reformat with RegEx
