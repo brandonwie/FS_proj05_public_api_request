@@ -97,7 +97,7 @@ header h1 {
   transition: 0.5s ease-out;
   overflow: hidden;
   /* source: https://www.cssmatic.com/box-shadow */
-  box-shadow: 7px 7px 5px 0px rgba(78, 89, 92, 1);
+  box-shadow: -5px 5px 5px 0px rgba(0, 0, 0, 0.5);
 }
 
 .card-img {
@@ -260,6 +260,9 @@ header h1 {
     /* background color changed */
     background: rgb(114, 182, 221);
     border: 1px solid rgba(50, 50, 50, 0.9);
+    transform: translate(5px, -5px);
+    /* source: https://www.cssmatic.com/box-shadow */
+    box-shadow: -10px 10px 5px 0px rgba(0, 0, 0, 1);
   }
 
   .card:hover .card-text {

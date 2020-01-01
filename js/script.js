@@ -87,7 +87,7 @@ getEmployees(randomUserAPI)
 // CARDS IN GALLERY
 gallery.addEventListener("click", e => {
   // if a target is not an empty space in the div with class "gallery", (to prevent console err)
-  if (e.target.className !== "gallery") {
+  if (e.target.className.includes("card")) {
     // find a closest div with the class name 'card'
     const selectedCardDiv = e.target.closest(".card");
     // target 'name' inside the div
@@ -108,18 +108,14 @@ gallery.addEventListener("click", e => {
 
 // CLOSING MODAL
 body.addEventListener("click", e => {
-  const currentModal = document.querySelector(".current-modal");
-  if (currentModal) {
-    // MODAL CLOSER: close the activated modal if the target is a close button or contains 'x' or outside of the modal
-    if (
-      e.target.className === "modal-close-btn" ||
-      e.target.textContent === "X" ||
-      e.target.className.includes("modal-container")
-    ) {
-      const modalDiv = e.target.closest(".modal-container");
-      modalDiv.setAttribute("style", "display: none");
-      modalDiv.classList.remove("current-modal");
-    }
+  if (
+    e.target.className === "modal-close-btn" ||
+    e.target.textContent === "X" ||
+    e.target.className.includes("modal-container")
+  ) {
+    const modalDiv = e.target.closest(".modal-container");
+    modalDiv.setAttribute("style", "display: none");
+    modalDiv.classList.remove("current-modal");
   }
 });
 
@@ -129,16 +125,16 @@ body.addEventListener("click", e => {
   const matchModalDivs = document.querySelectorAll(".match");
   // target current div
   const currentModalDiv = document.querySelector(".current-modal");
-  // PREVIOUS MODAL
+  // PREVIOUS BUTTON IN MODAL
   if (
     // if the target includes the class name "modal-prev" and not the first matching modal,
     e.target.className.includes("modal-prev") &&
     currentModalDiv !== matchModalDivs[0]
   ) {
     for (let i = 0; i < matchModalDivs.length; i++) {
-      const currentModal = matchModalDivs[i];
-      const prevModal = matchModalDivs[i - 1];
       if (matchModalDivs[i].className.includes("current-modal")) {
+        const currentModal = matchModalDivs[i];
+        const prevModal = matchModalDivs[i - 1];
         currentModal.setAttribute("style", "display: none");
         currentModal.classList.remove("current-modal");
         // setting for PREV. sibling MODAL
@@ -147,21 +143,22 @@ body.addEventListener("click", e => {
       }
     }
   }
-  // NEXT MODAL
+  // NEXT BUTTON IN MODAL
   if (
     // if the target includes the class name "modal-next" and not the last matching modal,
     e.target.className.includes("modal-next") &&
-    currentModalDiv !== matchModalDivs[matchModalDivs.length]
+    currentModalDiv !== matchModalDivs[matchModalDivs.length - 1]
   ) {
     for (let i = 0; i < matchModalDivs.length; i++) {
-      const currentModal = matchModalDivs[i];
-      const nextModal = matchModalDivs[i + 1];
       if (matchModalDivs[i].className.includes("current-modal")) {
+        const currentModal = matchModalDivs[i];
+        const nextModal = matchModalDivs[i + 1];
         currentModal.setAttribute("style", "display: none");
         currentModal.classList.remove("current-modal");
-        console.log(nextModal);
         nextModal.removeAttribute("style");
         nextModal.classList.add("current-modal");
+        //! this loop will pass the 'if' condition again and again after it's satisfied already because next one, "i+1" gets "current-modal" class; So you have to break out when the condition is satisfied/
+        break;
       }
     }
   }
@@ -192,7 +189,7 @@ function formatBirthday(day) {
  *!  Search Section
  *********************************/
 
-// Search Container
+// SEARCH CONTAINER
 const form = document.createElement("form");
 form.setAttribute("action", "#");
 form.setAttribute("method", "get");
@@ -202,12 +199,34 @@ form.innerHTML = `
     <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
 `;
 
-// Live-search function
+// LIVE SEARCH FUNCTION
 const searchInput = document.querySelector("#search-input");
 searchInput.addEventListener("keyup", e => {
   const nameInCards = document.querySelectorAll(".card #name");
   const nameInModals = document.querySelectorAll(".modal-container #name");
   const userInput = e.target.value.toLowerCase();
+  for (let i = 0; i < nameInCards.length; i++) {
+    const nameCardDiv = nameInCards[i];
+    const name = nameCardDiv.textContent.toLowerCase();
+    const cardDiv = nameCardDiv.closest(".card");
+    const nameModalDiv = nameInModals[i];
+    const modalDiv = nameModalDiv.closest(".modal-container");
+    if (name.includes(userInput)) {
+      cardDiv.removeAttribute("style");
+      modalDiv.classList.add("match");
+    } else {
+      cardDiv.setAttribute("style", "display: none");
+      modalDiv.classList.remove("match");
+    }
+  }
+});
+// SUBMIT BUTTON EVENT LISTENER
+//! this is actually no need due to live search function, but I create it for a assessment purpose
+const searchSubmit = document.querySelector("#search-submit");
+searchSubmit.addEventListener("submit", e => {
+  const nameInCards = document.querySelectorAll(".card #name");
+  const nameInModals = document.querySelectorAll(".modal-container #name");
+  const userInput = searchInput.value.toLowerCase();
   for (let i = 0; i < nameInCards.length; i++) {
     const nameCardDiv = nameInCards[i];
     const name = nameCardDiv.textContent.toLowerCase();

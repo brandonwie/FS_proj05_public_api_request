@@ -18,7 +18,7 @@ API request project with Treehouse <br />It requests a JSON object from the API 
 - API request
 - async/await, promise
 - modal, modal navigation
-- live search
+- live search with multiple DOM manipulations
 
 ## Reference
 
